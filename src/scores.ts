@@ -236,3 +236,157 @@ export async function recordBracketCityScore(
     userId
   };
 }
+
+export async function recordStackdleScore(
+  puzzle: number,
+  userId: string,
+  score: number,
+) {
+  let data: Record<string, any> = {};
+
+  try {
+    data = JSON.parse(await readFile(FILE, "utf8"));
+  } catch {
+    // File doesn't exist yet or something?
+    console.log("could not parse score file");
+  }
+
+  data ??= {};
+  data.Stackdle ??= {};
+  data.Stackdle[puzzle] ??= [];
+
+  const previousScores = data.Stackdle[puzzle];
+  const previousHigh = Math.max(0, ...previousScores.map((x: any) => x.score));
+
+  previousScores.push({
+    userId,
+    score,
+    timestamp: new Date().toISOString()
+  });
+
+  await writeFile(FILE, JSON.stringify(data, null, 2));
+
+  return {
+    isRecord: score > previousHigh,
+    previousHigh,
+    score,
+    puzzle,
+    userId
+  };
+}
+
+export async function recordFivefoldScore(
+  puzzle: number,
+  userId: string,
+  time: number,
+) {
+  let data: Record<string, any> = {};
+
+  try {
+    data = JSON.parse(await readFile(FILE, "utf8"));
+  } catch {
+    // File doesn't exist yet or something?
+    console.log("could not parse score file");
+  }
+
+  data ??= {};
+  data.Fivefold ??= {};
+  data.Fivefold[puzzle] ??= [];
+
+  const score = 600 - time;
+  const previousScores = data.Fivefold[puzzle];
+  const previousHigh = Math.max(0, ...previousScores.map((x: any) => x.score));
+
+  previousScores.push({
+    userId,
+    score,
+    timestamp: new Date().toISOString()
+  });
+
+  await writeFile(FILE, JSON.stringify(data, null, 2));
+
+  return {
+    isRecord: score > previousHigh,
+    previousHigh,
+    score,
+    puzzle,
+    userId
+  };
+}
+
+export async function recordTiledWordsScore(
+  puzzleDate: string,
+  userId: string,
+  time: number,
+) {
+  let data: Record<string, any> = {};
+
+  try {
+    data = JSON.parse(await readFile(FILE, "utf8"));
+  } catch {
+    // File doesn't exist yet or something?
+    console.log("could not parse score file");
+  }
+
+  data ??= {};
+  data.TiledWords ??= {};
+  data.TiledWords[puzzleDate] ??= [];
+
+  const score = 10000 - time;
+  const previousScores = data.TiledWords[puzzleDate];
+  const previousHigh = Math.max(0, ...previousScores.map((x: any) => x.score));
+
+  previousScores.push({
+    userId,
+    score,
+    timestamp: new Date().toISOString()
+  });
+
+  await writeFile(FILE, JSON.stringify(data, null, 2));
+
+  return {
+    isRecord: score > previousHigh,
+    previousHigh,
+    score,
+    puzzleDate,
+    userId
+  };
+}
+
+export async function recordFlipsiesScore(
+  puzzle: number,
+  userId: string,
+  score: number,
+) {
+  let data: Record<string, any> = {};
+
+  try {
+    data = JSON.parse(await readFile(FILE, "utf8"));
+  } catch {
+    // File doesn't exist yet or something?
+    console.log("could not parse score file");
+  }
+
+  data ??= {};
+  data.Flipsies ??= {};
+  data.Flipsies[puzzle] ??= [];
+
+  const previousScores = data.Flipsies[puzzle];
+  const previousHigh = Math.max(0, ...previousScores.map((x: any) => x.score));
+
+  previousScores.push({
+    userId,
+    score,
+    timestamp: new Date().toISOString()
+  });
+
+  await writeFile(FILE, JSON.stringify(data, null, 2));
+
+  return {
+    isRecord: score > previousHigh,
+    previousHigh,
+    score,
+    puzzle,
+    userId
+  };
+}
